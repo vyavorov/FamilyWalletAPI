@@ -1,0 +1,40 @@
+﻿using FamilyWallet.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FamilyWallet.Domain.Models
+{
+    public class Transaction
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        public int UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public User User { get; set; }
+
+        [Required]
+        public TransactionType Type { get; set; }
+
+        [StringLength(100)]
+        public string? Description { get; set; }
+
+        [Required]
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Amount { get; set; }
+
+        [Required]
+        public DateTime Date { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Category { get; set; } = string.Empty;
+    }
+}
