@@ -5,6 +5,12 @@ VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyWallet.API", "FamilyWallet.API\FamilyWallet.API.csproj", "{638C4B0D-97FB-4A36-B579-B200B2EC4481}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyWallet.Application", "FamilyWallet.Application\FamilyWallet.Application.csproj", "{29B09A9E-AC5E-4050-9BFF-F852B2F04955}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyWallet.Domain", "FamilyWallet.Domain\FamilyWallet.Domain.csproj", "{7F96D258-D3D1-4F0A-977F-A0420DFBC11D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FamilyWallet.Infrastructure", "FamilyWallet.Infrastructure\FamilyWallet.Infrastructure.csproj", "{AB1189B2-DFBF-4454-8F98-6B41EA49E5BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{638C4B0D-97FB-4A36-B579-B200B2EC4481}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{638C4B0D-97FB-4A36-B579-B200B2EC4481}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{638C4B0D-97FB-4A36-B579-B200B2EC4481}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29B09A9E-AC5E-4050-9BFF-F852B2F04955}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29B09A9E-AC5E-4050-9BFF-F852B2F04955}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29B09A9E-AC5E-4050-9BFF-F852B2F04955}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29B09A9E-AC5E-4050-9BFF-F852B2F04955}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F96D258-D3D1-4F0A-977F-A0420DFBC11D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F96D258-D3D1-4F0A-977F-A0420DFBC11D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F96D258-D3D1-4F0A-977F-A0420DFBC11D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F96D258-D3D1-4F0A-977F-A0420DFBC11D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB1189B2-DFBF-4454-8F98-6B41EA49E5BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1189B2-DFBF-4454-8F98-6B41EA49E5BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB1189B2-DFBF-4454-8F98-6B41EA49E5BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB1189B2-DFBF-4454-8F98-6B41EA49E5BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

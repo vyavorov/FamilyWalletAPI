@@ -10,4 +10,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FamilyWallet.Application\FamilyWallet.Application.csproj" />
+    <ProjectReference Include="..\FamilyWallet.Domain\FamilyWallet.Domain.csproj" />
+    <ProjectReference Include="..\FamilyWallet.Infrastructure\FamilyWallet.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
