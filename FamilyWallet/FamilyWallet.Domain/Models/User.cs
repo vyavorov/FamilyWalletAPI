@@ -33,5 +33,9 @@ namespace FamilyWallet.Domain.Models
         [ForeignKey(nameof(FamilyGroupId))]
         public FamilyGroup? FamilyGroup { get; set; }
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+
+        [Column(TypeName = "decimal(18, 2)")]
+        [Required]
+        public decimal Balance { get; set; } = 0;
     }
 }

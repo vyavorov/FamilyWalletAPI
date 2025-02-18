@@ -1,4 +1,4 @@
-using FamilyWallet.Application.Interfaces.Repositories;
+using FamilyWallet.Application.Repositories.Interfaces;
 using FamilyWallet.Application.Repositories;
 using FamilyWallet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
