@@ -2,6 +2,8 @@ using FamilyWallet.Application.Repositories.Interfaces;
 using FamilyWallet.Application.Repositories;
 using FamilyWallet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using FamilyWallet.Application.Services.Interfaces;
+using FamilyWallet.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,8 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IFamilyGroupRepository, FamilyGroupRepository>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+
 
 var app = builder.Build();
 
