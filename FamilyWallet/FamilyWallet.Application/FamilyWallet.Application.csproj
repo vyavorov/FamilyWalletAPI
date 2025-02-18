@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FamilyWallet.Domain\FamilyWallet.Domain.csproj" />
+    <ProjectReference Include="..\FamilyWallet.Infrastructure\FamilyWallet.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,3 +1,5 @@
+using FamilyWallet.Application.Interfaces.Repositories;
+using FamilyWallet.Application.Repositories;
 using FamilyWallet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +15,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FamilyWalletDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") ??
                       Environment.GetEnvironmentVariable("FAMILY_WALLET_CONNECTION")));
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IFamilyGroupRepository, FamilyGroupRepository>();
 
 var app = builder.Build();
 
