@@ -90,6 +90,60 @@ namespace FamilyWallet.Application.Services
             return new ServiceResponse { Message = "Transaction added successfully", Success = true };
         }
 
+        public async Task<ServiceResponse> DeleteTransactionAsync(int transactionId)
+        {
+            var transaction = await _transactionRepository.GetByIdAsync(transactionId);
+            if (transaction == null)
+            {
+                return new ServiceResponse { Message = "Transaction not found", Success = false };
+            }
+            var user = await _userRepository.GetByIdAsync(transaction.UserId);
+            var account = await _accountRepository.GetByIdAsync(transaction.AccountId);
+            if (user == null)
+            {
+                return new ServiceResponse { Message = "User not found", Success = false };
+            }
+            if (account == null)
+            {
+                return new ServiceResponse { Message = "Account not found", Success = false };
+            }
+            if (transaction.Type == TransactionType.Expense)
+            {
+                user.Balance += transaction.Amount;
+                account.Balance += transaction.Amount;
+            }
+            else if (transaction.Type == TransactionType.Income)
+            {
+                user.Balance -= transaction.Amount;
+                account.Balance -= transaction.Amount;
+            }
+            await _userRepository.UpdateAsync(user);
+            await _accountRepository.UpdateAsync(account);
+            await _transactionRepository.DeleteAsync(transactionId);
+            return new ServiceResponse { Message = "Transaction deleted successfully", Success = true };
+        }
+
+        public async Task<ServiceResponse<IEnumerable<TransactionDto>>> GetAllTransactions()
+        {
+            var transactions = await _transactionRepository.GetAllAsync();
+            if (!transactions.Any())
+            {
+                return new ServiceResponse<IEnumerable<TransactionDto>> { Success = false, Message = "No transactions yet" };
+
+            }
+            var transactionDtos = transactions.Select(t => new TransactionDto
+            {
+                Id = t.Id,
+                UserId = t.UserId,
+                Amount = t.Amount,
+                Date = t.Date,
+                Type = t.Type,
+                Category = t.Category,
+                Description = t.Description,
+            });
+            return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
+        }
+
         public async Task<ServiceResponse<TransactionDto>> GetTransactionByIdAsync(int transactionId)
         {
             var transaction = await _transactionRepository.GetByIdAsync(transactionId);

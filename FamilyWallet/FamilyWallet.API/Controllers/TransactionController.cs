@@ -115,5 +115,33 @@ namespace FamilyWallet.API.Controllers
             return Ok(response.Data);
         }
 
+
+        /// <summary>
+        /// Deleting transaction by id
+        /// </summary>
+        [HttpDelete("{transactionId}")]
+        public async Task<IActionResult> DeleteTransactionAsync(int transactionId)
+        {
+            var response = await _transactionService.DeleteTransactionAsync(transactionId);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Getting all transactions
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> GetAllTransactions()
+        {
+            var response = await _transactionService.GetAllTransactions();
+            if (!response.Success)
+            {
+                return NotFound(response.Message);
+            }
+            return Ok(response.Data);
+        }
     }
 }

@@ -18,5 +18,9 @@ namespace FamilyWallet.Application.Services.Interfaces
 
         Task<ServiceResponse> UpdateTransactionAsync(TransactionDto transactionDto);
         Task<ServiceResponse<TransactionDto>> GetTransactionByIdAsync(int transactionId);
+
+        Task<ServiceResponse> DeleteTransactionAsync(int transactionId);
+
+        Task<ServiceResponse<IEnumerable<TransactionDto>>> GetAllTransactions();
     }
 }
