@@ -36,5 +36,11 @@ namespace FamilyWallet.Domain.Models
         [Required]
         [StringLength(100)]
         public string Category { get; set; } = string.Empty;
+
+        [Required]
+        public int AccountId { get; set; }
+
+        [ForeignKey(nameof(AccountId))]
+        public Account Account { get; set; }
     }
 }

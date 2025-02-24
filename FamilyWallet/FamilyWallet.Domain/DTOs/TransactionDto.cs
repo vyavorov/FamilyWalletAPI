@@ -1,4 +1,5 @@
 ﻿using FamilyWallet.Domain.Enums;
+using FamilyWallet.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace FamilyWallet.Domain.DTOs
         public TransactionType Type { get; set; }
         public string Category { get; set; } = string.Empty;
         public string? Description { get; set; }
+        public int AccountId { get; set; }
     }
 }

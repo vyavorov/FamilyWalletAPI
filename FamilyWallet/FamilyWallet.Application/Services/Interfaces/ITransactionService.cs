@@ -15,5 +15,8 @@ namespace FamilyWallet.Application.Services.Interfaces
         Task<ServiceResponse<IEnumerable<TransactionDto>>> GetTransactionsByFamilyGroupAsync(int familyGroupId);
         Task<ServiceResponse<IEnumerable<TransactionDto>>> GetTransactionsByDateRangeAsync(DateTime startDate, DateTime endDate);
         Task<ServiceResponse<IEnumerable<TransactionDto>>> GetTransactionsByTypeAsync(int userId, TransactionType type);
+
+        Task<ServiceResponse> UpdateTransactionAsync(TransactionDto transactionDto);
+        Task<ServiceResponse<TransactionDto>> GetTransactionByIdAsync(int transactionId);
     }
 }

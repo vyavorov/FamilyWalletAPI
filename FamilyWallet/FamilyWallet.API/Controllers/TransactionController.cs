@@ -20,7 +20,7 @@ namespace FamilyWallet.API.Controllers
         /// Adding new transaction
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> AddTransactionAsync([FromBody]TransactionDto transactionDto)
+        public async Task<IActionResult> AddTransactionAsync([FromBody] TransactionDto transactionDto)
         {
             var response = await _transactionService.AddTransactionAsync(transactionDto);
             if (!response.Success)
@@ -28,6 +28,18 @@ namespace FamilyWallet.API.Controllers
                 return BadRequest(response.Message);
             }
             return Ok(response);
+        }
+
+
+        /// <summary>
+        /// Връща всички транзакции на семейната група
+        /// </summary>
+        [HttpGet("familyGroup/{familyGroupId}")]
+        public async Task<IActionResult> GetTransactionsByFamilyGroup(int familyGroupId)
+        {
+            var result = await _transactionService.GetTransactionsByFamilyGroupAsync(familyGroupId);
+            if (!result.Success) return NotFound(result.Message);
+            return Ok(result.Data);
         }
 
 
@@ -73,5 +85,35 @@ namespace FamilyWallet.API.Controllers
             }
             return Ok(response.Data);
         }
+
+        /// <summary>
+        /// Updating transaction
+        /// </summary>
+        [HttpPut("{transactionId}")]
+        public async Task<IActionResult> UpdateTransactionAsync([FromBody] TransactionDto transactionDto)
+        {
+            var response = await _transactionService.UpdateTransactionAsync(transactionDto);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Getting transaction by Id
+        /// </summary>
+        /// 
+       [HttpGet("{transactionId}")]
+       public async Task<IActionResult>  GetTransactionByIdAsync(int transactionId)
+        {
+            var response = await _transactionService.GetTransactionByIdAsync(transactionId);
+            if (!response.Success)
+            {
+                return NotFound(response.Message);
+            }
+            return Ok(response.Data);
+        }
+
     }
 }

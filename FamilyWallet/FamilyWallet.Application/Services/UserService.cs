@@ -17,7 +17,7 @@ namespace FamilyWallet.Application.Services
 
         public UserService(IUserRepository userRepository)
         {
-            _userRepository = userRepository
+            _userRepository = userRepository;
         }
 
         public async Task<ServiceResponse<ICollection<UserDto>>> GetAllUsersAsync()

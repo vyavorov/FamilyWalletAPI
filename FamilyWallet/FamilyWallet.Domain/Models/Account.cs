@@ -8,36 +8,24 @@ using System.Threading.Tasks;
 
 namespace FamilyWallet.Domain.Models
 {
-    public class User
+    public class Account
     {
         [Key]
         public int Id { get; set; }
-
         [Required]
         [StringLength(50)]
         public string Name { get; set; } = string.Empty;
-
         [Required]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;
-
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal Balance { get; set; } = 0;
         [Required]
-        public string PasswordHash { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(20)]
-        public string Role { get; set; } = string.Empty;
+        public int UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public User User { get; set; } = null!;
 
         public int? FamilyGroupId { get; set; }
 
         [ForeignKey(nameof(FamilyGroupId))]
         public FamilyGroup? FamilyGroup { get; set; }
-        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
-
-        [Column(TypeName = "decimal(18, 2)")]
-        [Required]
-        public decimal Balance { get; set; } = 0;
-
-        public ICollection<Account> Accounts { get; set; } = new List<Account>();
     }
 }
