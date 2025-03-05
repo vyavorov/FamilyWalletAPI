@@ -28,6 +28,8 @@ namespace FamilyWallet.Infrastructure.Persistence
                 .HasForeignKey(u => u.FamilyGroupId)
                 .OnDelete(DeleteBehavior.SetNull); // Ако групата бъде изтрита, потребителите остават без група
 
+            modelBuilder.Entity<FamilyGroup>().HasIndex(fg => fg.Name).IsUnique();
+
             base.OnModelCreating(modelBuilder);
         }
 
