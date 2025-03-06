@@ -14,5 +14,7 @@ namespace FamilyWallet.Application.Repositories.Interfaces
         Task<IEnumerable<Transaction>> GetByFamilyGroupIdAsync(int familyGroupId);
         Task<IEnumerable<Transaction>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
         Task<IEnumerable<Transaction>> GetByTypeAsync(TransactionType type);
+        Task<decimal> GetTotalIncomeAsync();
+        Task<decimal> GetTotalExpenseAsync();
     }
 }
