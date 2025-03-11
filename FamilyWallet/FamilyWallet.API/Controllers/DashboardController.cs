@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyWallet.API.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class DashboardController : ControllerBase
     {
         private readonly ITransactionRepository _transactionRepository;
 
         public DashboardController(ITransactionRepository transactionRepository)
         {
-            transactionRepository = _transactionRepository;
+            _transactionRepository = transactionRepository;
         }
 
         [HttpGet]

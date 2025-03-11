@@ -53,7 +53,7 @@ namespace FamilyWallet.Application.Services
                 Amount = transactionDto.Amount,
                 Date = transactionDto.Date,
                 Type = transactionDto.Type,
-                Category = transactionDto.Category,
+                CategoryId = transactionDto.CategoryId,
                 Description = transactionDto.Description,
                 AccountId = account.Id
             };
@@ -138,7 +138,7 @@ namespace FamilyWallet.Application.Services
                 Amount = t.Amount,
                 Date = t.Date,
                 Type = t.Type,
-                Category = t.Category,
+                CategoryId = t.CategoryId,
                 Description = t.Description,
             });
             return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
@@ -155,7 +155,7 @@ namespace FamilyWallet.Application.Services
             {
                 AccountId = transaction.AccountId,
                 Amount = transaction.Amount,
-                Category = transaction.Category,
+                CategoryId = transaction.CategoryId,
                 Date = transaction.Date,
                 Description = transaction.Description,
                 Type = transaction.Type,
@@ -180,7 +180,7 @@ namespace FamilyWallet.Application.Services
                 Amount = t.Amount,
                 Date = t.Date,
                 Type = t.Type,
-                Category = t.Category,
+                CategoryId = t.CategoryId,
                 Description = t.Description,
             });
             return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
@@ -200,7 +200,7 @@ namespace FamilyWallet.Application.Services
                 Amount = t.Amount,
                 Date = t.Date,
                 Type = t.Type,
-                Category = t.Category,
+                CategoryId = t.CategoryId,
                 Description = t.Description,
             });
             return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
@@ -221,7 +221,7 @@ namespace FamilyWallet.Application.Services
                 Amount = t.Amount,
                 Date = t.Date,
                 Type = t.Type,
-                Category = t.Category,
+                CategoryId = t.CategoryId,
                 Description = t.Description,
             });
             return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
@@ -241,7 +241,7 @@ namespace FamilyWallet.Application.Services
                 Amount = t.Amount,
                 Date = t.Date,
                 Type = t.Type,
-                Category = t.Category,
+                CategoryId = t.CategoryId,
                 Description = t.Description,
             });
             return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
@@ -290,7 +290,7 @@ namespace FamilyWallet.Application.Services
             transaction.Amount = transactionDto.Amount;
             transaction.Date = transactionDto.Date;
             transaction.Type = transactionDto.Type;
-            transaction.Category = transactionDto.Category;
+            transaction.CategoryId = transactionDto.CategoryId;
             transaction.Description = transactionDto.Description;
             transaction.AccountId = account.Id;
             await _transactionRepository.UpdateAsync(transaction);

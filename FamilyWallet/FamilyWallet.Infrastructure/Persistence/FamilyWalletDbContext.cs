@@ -37,6 +37,7 @@ namespace FamilyWallet.Infrastructure.Persistence
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<FamilyGroup> FamilyGroups { get; set; }
         public DbSet<Account> Accounts{ get; set; }
+        public DbSet<Category> Categories{ get; set; }
 
     }
 }

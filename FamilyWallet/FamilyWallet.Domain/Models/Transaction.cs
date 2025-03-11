@@ -34,8 +34,10 @@ namespace FamilyWallet.Domain.Models
         public DateTime Date { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string Category { get; set; } = string.Empty;
+        public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public Category Category { get; set; }
 
         [Required]
         public int AccountId { get; set; }
