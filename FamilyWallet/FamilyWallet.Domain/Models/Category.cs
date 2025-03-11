@@ -19,5 +19,8 @@ namespace FamilyWallet.Domain.Models
         public FamilyGroup FamilyGroup { get; set; }
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
         public int UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public User User { get; set; } = null!;
     }
 }
