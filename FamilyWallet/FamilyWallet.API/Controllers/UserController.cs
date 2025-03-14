@@ -1,5 +1,6 @@
 ﻿using FamilyWallet.Application.Services.Interfaces;
 using FamilyWallet.Domain.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyWallet.API.Controllers
@@ -16,6 +17,7 @@ namespace FamilyWallet.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllUsersAsync()
         {
             var response = await _userService.GetAllUsersAsync();
@@ -27,6 +29,7 @@ namespace FamilyWallet.API.Controllers
         }
 
         [HttpGet("{userId}")]
+        [Authorize]
         public async Task<IActionResult> GetUserByIdAsync(int userId)
         {
             var response = await _userService.GetUserByIdAsync(userId);
@@ -46,6 +49,17 @@ namespace FamilyWallet.API.Controllers
                 return BadRequest(response.Message);
             }
             return Ok(response);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserDto userDto)
+        {
+            var response = await _userService.LoginAsync(userDto);
+            if (!response.Success)
+            { 
+                return Unauthorized(response.Message);
+            }
+            return Ok(new { Token = response.Data });
         }
 
     }

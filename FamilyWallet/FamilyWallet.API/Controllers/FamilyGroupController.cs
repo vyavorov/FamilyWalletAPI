@@ -1,4 +1,5 @@
 ﻿using FamilyWallet.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
 
@@ -6,6 +7,7 @@ namespace FamilyWallet.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FamilyGroupController : ControllerBase
     {
         private readonly IFamilyGroupService _familyGroupService;

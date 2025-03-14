@@ -1,12 +1,14 @@
 ﻿using FamilyWallet.Application.Services.Interfaces;
 using FamilyWallet.Domain.DTOs;
 using FamilyWallet.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyWallet.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService _transactionService;

@@ -8,16 +8,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FamilyWallet.Application.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _config;
 
-        public UserService(IUserRepository userRepository)
+
+        public UserService(IUserRepository userRepository, IConfiguration config)
         {
             _userRepository = userRepository;
+            _config = config;
         }
 
         public async Task<ServiceResponse<ICollection<UserDto>>> GetAllUsersAsync()
@@ -66,7 +73,6 @@ namespace FamilyWallet.Application.Services
 
             User newUser = new User()
             {
-                Id = userDto.Id,
                 Name = userDto.Name,
                 Email = userDto.Email,
                 PasswordHash = HashPassword(userDto.Password),
@@ -78,9 +84,47 @@ namespace FamilyWallet.Application.Services
             return new ServiceResponse { Message = "User registered successfully", Success = true };
         }
 
+        public async Task<ServiceResponse<string>> LoginAsync(UserDto userDto)
+        {
+            var user = await _userRepository.GetByEmailAsync(userDto.Email);
+            if (user == null)
+            {
+                return new ServiceResponse<string> { Message = "User not found", Success = false };
+            }
+            if (!BCrypt.Net.BCrypt.Verify(userDto.Password, user.PasswordHash))
+            {
+                return new ServiceResponse<string> { Message = "Invalid credentials", Success = false };
+            }
+            string token = GenerateJwtToken(user);
+            return new ServiceResponse<string> { Message = "Login successful", Success = true, Data = token };
+        }
+
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        private string GenerateJwtToken(User user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role)
+        };
+
+            var token = new JwtSecurityToken(
+                _config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                claims,
+                expires: DateTime.UtcNow.AddHours(1),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

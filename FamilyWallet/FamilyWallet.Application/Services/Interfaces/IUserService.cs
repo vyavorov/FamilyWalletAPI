@@ -10,6 +10,7 @@ namespace FamilyWallet.Application.Services.Interfaces
     public interface IUserService
     {
         Task<ServiceResponse> RegisterUserAsync(UserDto userDto);
+        Task<ServiceResponse<string>> LoginAsync(UserDto userDto);
         Task<ServiceResponse<UserDto>> GetUserByIdAsync(int userId);
         Task<ServiceResponse<ICollection<UserDto>>> GetAllUsersAsync();
     }
