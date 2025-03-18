@@ -19,8 +19,15 @@ namespace FamilyWallet.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDashboardData()
         {
-            var income = await _transactionRepository.GetTotalIncomeAsync();
-            var expense = await _transactionRepository.GetTotalExpenseAsync();
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+            int userId = int.Parse(userIdClaim.Value);
+            var income = await _transactionRepository.GetTotalIncomeAsync(userId);
+            var expense = await _transactionRepository.GetTotalExpenseAsync(userId);
             var totalBalance = income - expense;
 
             return Ok(new { income, expense, totalBalance });

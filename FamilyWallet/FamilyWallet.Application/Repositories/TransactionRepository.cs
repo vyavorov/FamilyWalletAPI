@@ -35,14 +35,14 @@ namespace FamilyWallet.Application.Repositories
             return await _context.Transactions.Where(t => t.UserId == userId).ToListAsync();
         }
 
-        public async Task<decimal> GetTotalExpenseAsync()
+        public async Task<decimal> GetTotalExpenseAsync(int userId)
         {
-            return await _context.Transactions.Where(t => t.Type == TransactionType.Expense && t.Amount > 0).SumAsync(t => t.Amount);
+            return await _context.Transactions.Where(t => t.UserId == userId && t.Type == TransactionType.Expense && t.Amount > 0).SumAsync(t => t.Amount);
         }
 
-        public async Task<decimal> GetTotalIncomeAsync()
+        public async Task<decimal> GetTotalIncomeAsync(int userId)
         {
-            return await _context.Transactions.Where(t => t.Type == TransactionType.Income && t.Amount > 0).SumAsync(t => t.Amount);
+            return await _context.Transactions.Where(t => t.UserId == userId && t.Type == TransactionType.Income && t.Amount > 0).SumAsync(t => t.Amount);
         }
     }
 }
