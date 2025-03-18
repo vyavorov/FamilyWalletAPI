@@ -29,6 +29,29 @@ namespace FamilyWallet.API.Controllers
             return Ok(response.Data);
         }
 
+
+        [HttpGet("user")]
+        public async Task<IActionResult> GetCategoriesByUserAsync()
+        {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            var response = await _categoryService.GetCategoriesByUserAsync(userId);
+
+            if (!response.Success)
+            {
+                return NotFound(response.Message);
+            }
+            return Ok(response.Data);
+        }
+
+
         [HttpGet("{categoryId}")]
         public async Task<IActionResult> GetCategoryByIdAsync(int categoryId)
         {

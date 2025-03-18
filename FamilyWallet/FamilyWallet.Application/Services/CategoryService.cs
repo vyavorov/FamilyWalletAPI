@@ -90,7 +90,7 @@ namespace FamilyWallet.Application.Services
             var categories = await categoryRepository.GetCategoriesByUserIdAsync(userId);
             if (!categories.Any())
             {
-                return new ServiceResponse<IEnumerable<CategoryDto>> { Message = "No categories found", Success = false };
+                return new ServiceResponse<IEnumerable<CategoryDto>> { Message = "No categories found", Success = true, Data = new List<CategoryDto>() };
             }
             var categoriesDto = categories.Select(c => new CategoryDto
             {
