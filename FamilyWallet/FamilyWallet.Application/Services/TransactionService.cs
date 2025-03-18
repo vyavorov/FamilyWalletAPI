@@ -42,7 +42,7 @@ namespace FamilyWallet.Application.Services
             {
                 return new ServiceResponse { Message = "Account not found", Success = false };
             }
-            if (transactionDto.Type == TransactionType.Expense && account.Balance< transactionDto.Amount)
+            if (transactionDto.Type == TransactionType.Expense && account.Balance < transactionDto.Amount)
             {
                 return new ServiceResponse { Message = "Insufficient balance", Success = false };
             }
@@ -229,21 +229,38 @@ namespace FamilyWallet.Application.Services
 
         public async Task<ServiceResponse<IEnumerable<TransactionDto>>> GetTransactionsByUserAsync(int userId)
         {
-            var transactions = await _transactionRepository.GetByUserIdAsync(userId);
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return new ServiceResponse<IEnumerable<TransactionDto>> { Success = false, Message = "User not found." };
+            }
+
+            IEnumerable<Transaction> transactions = new List<Transaction>();
+            if (user.FamilyGroupId.HasValue)
+            {
+                transactions = await _transactionRepository.GetByFamilyGroupIdAsync(user.FamilyGroupId.Value);
+            }
+            else
+            {
+                transactions = await _transactionRepository.GetByUserIdAsync(userId);
+            }
+
             if (!transactions.Any())
             {
-                return new ServiceResponse<IEnumerable<TransactionDto>> { Success = false, Message = "No transactions found for this user." };
+                return new ServiceResponse<IEnumerable<TransactionDto>> { Message = "No transactions found", Success = true, Data = new List<TransactionDto>() };
             }
+
             var transactionDtos = transactions.Select(t => new TransactionDto
             {
                 Id = t.Id,
-                UserId = t.UserId,
-                Amount = t.Amount,
-                Date = t.Date,
-                Type = t.Type,
-                CategoryId = t.CategoryId,
                 Description = t.Description,
-            });
+                Amount = t.Amount,
+                Type = t.Type,
+                Date = t.Date,
+                CategoryId = t.CategoryId,
+                AccountId = t.AccountId
+            }).ToList();
+
             return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
         }
 
@@ -253,7 +270,7 @@ namespace FamilyWallet.Application.Services
             if (transaction == null)
             {
                 return new ServiceResponse { Message = "Transaction not found", Success = false };
-           }
+            }
             var account = await _accountRepository.GetByIdAsync(transactionDto.AccountId);
             var user = await _userRepository.GetByIdAsync(transactionDto.UserId);
             if (user == null)
