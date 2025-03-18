@@ -33,7 +33,7 @@ namespace FamilyWallet.API.Controllers
         [HttpGet("user")]
         public async Task<IActionResult> GetCategoriesByUserAsync()
         {
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userIdClaim = User.FindFirst("userId");
 
             if (userIdClaim == null)
             {

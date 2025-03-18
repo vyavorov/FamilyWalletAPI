@@ -19,7 +19,7 @@ namespace FamilyWallet.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDashboardData()
         {
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+            var userIdClaim = User.FindFirst("userId");
 
             if (userIdClaim == null)
             {
