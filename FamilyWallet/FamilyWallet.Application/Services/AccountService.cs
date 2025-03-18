@@ -94,7 +94,7 @@ namespace FamilyWallet.Application.Services
             var accounts = await _accountRepository.GetAccountsByUserIdAsync(userId);
             if (!accounts.Any())
             {
-                return new ServiceResponse<ICollection<AccountDto>> { Message = "No accounts found", Success = false };
+                return new ServiceResponse<ICollection<AccountDto>> { Message = "No accounts found", Success = true, Data = new List<AccountDto>() };
             }
             var accountsDtos = accounts.Select(a => new AccountDto
             {

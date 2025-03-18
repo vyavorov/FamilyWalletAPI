@@ -72,9 +72,18 @@ namespace FamilyWallet.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetAccountsByUserAsync(int userId)
+        [HttpGet("user")]
+        public async Task<IActionResult> GetAccountsByUserAsync()
         {
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
             var response = await _accountService.GetAccountsByUserIdAsync(userId);
             if (!response.Success)
             {
