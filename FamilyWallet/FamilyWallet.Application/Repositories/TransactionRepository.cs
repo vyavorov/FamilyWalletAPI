@@ -15,6 +15,12 @@ namespace FamilyWallet.Application.Repositories
     {
         public TransactionRepository(FamilyWalletDbContext context) : base(context) { }
 
+        public async Task<IEnumerable<Transaction>> GetAllOrderedTransactions()
+        {
+            var transactions = await _context.Transactions.OrderByDescending(t => t.Date).ToListAsync();
+            return transactions;
+        }
+
         public async Task<IEnumerable<Transaction>> GetByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
             return await _context.Transactions.Where(t => t.Date >= startDate && t.Date <= endDate).ToListAsync();
@@ -32,7 +38,7 @@ namespace FamilyWallet.Application.Repositories
 
         public async Task<IEnumerable<Transaction>> GetByUserIdAsync(int userId)
         {
-            return await _context.Transactions.Where(t => t.UserId == userId).ToListAsync();
+            return await _context.Transactions.Where(t => t.UserId == userId).OrderByDescending(t => t.Date).ToListAsync();
         }
 
         public async Task<decimal> GetTotalExpenseAsync(int userId)

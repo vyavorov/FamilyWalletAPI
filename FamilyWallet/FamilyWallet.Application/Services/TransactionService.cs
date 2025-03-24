@@ -125,7 +125,7 @@ namespace FamilyWallet.Application.Services
 
         public async Task<ServiceResponse<IEnumerable<TransactionDto>>> GetAllTransactions()
         {
-            var transactions = await _transactionRepository.GetAllAsync();
+            var transactions = await _transactionRepository.GetAllOrderedTransactions();
             if (!transactions.Any())
             {
                 return new ServiceResponse<IEnumerable<TransactionDto>> { Success = false, Message = "No transactions yet" };
