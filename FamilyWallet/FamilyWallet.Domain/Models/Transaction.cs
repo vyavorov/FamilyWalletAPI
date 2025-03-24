@@ -39,10 +39,18 @@ namespace FamilyWallet.Domain.Models
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
 
-        [Required]
-        public int AccountId { get; set; }
+        public int? AccountId { get; set; }
 
         [ForeignKey(nameof(AccountId))]
-        public Account Account { get; set; }
+        public Account? Account { get; set; }
+
+        public int? FromAccountId { get; set; }
+
+        [ForeignKey(nameof(FromAccountId))]
+        public Account? FromAccount { get; set; }
+
+        public int? ToAccountId { get; set; }
+        [ForeignKey(nameof(ToAccountId))]
+        public Account? ToAccount { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace FamilyWallet.Application.Repositories
 {
     public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
-        public AccountRepository(FamilyWalletDbContext context) : base(context){ }
+        public AccountRepository(FamilyWalletDbContext context) : base(context) { }
 
         public async Task<bool> ExistsByNameAsync(string name) => await _context.Accounts.AnyAsync(a => a.Name == name);
 
@@ -20,5 +20,6 @@ namespace FamilyWallet.Application.Repositories
 
         public async Task<ICollection<Account>> GetAccountsByFamilyIdAsync(int familyGroupId) => await _context.Accounts.Where(a => a.User.FamilyGroupId == familyGroupId).ToListAsync();
 
+        public async Task<Account?> GetByIdAsync(int? id) => await _context.Accounts.FindAsync(id);
     }
 }

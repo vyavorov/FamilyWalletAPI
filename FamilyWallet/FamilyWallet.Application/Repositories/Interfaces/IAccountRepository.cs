@@ -9,7 +9,7 @@ namespace FamilyWallet.Application.Repositories.Interfaces
 {
     public interface IAccountRepository
     {
-        Task<Account?> GetByIdAsync(int id);
+        Task<Account?> GetByIdAsync(int? id);
         Task<IEnumerable<Account>> GetAllAsync();
         Task AddAsync(Account entity);
         Task UpdateAsync(Account entity);

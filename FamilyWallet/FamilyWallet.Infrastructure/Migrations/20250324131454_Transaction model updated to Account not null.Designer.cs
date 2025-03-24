@@ -3,6 +3,7 @@ using System;
 using FamilyWallet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FamilyWallet.Infrastructure.Migrations
 {
     [DbContext(typeof(FamilyWalletDbContext))]
-    partial class FamilyWalletDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250324131454_Transaction model updated to Account not null")]
+    partial class TransactionmodelupdatedtoAccountnotnull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,6 +116,7 @@ namespace FamilyWallet.Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("AccountId")
+                        .IsRequired()
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Amount")
@@ -232,7 +236,9 @@ namespace FamilyWallet.Infrastructure.Migrations
                 {
                     b.HasOne("FamilyWallet.Domain.Models.Account", "Account")
                         .WithMany()
-                        .HasForeignKey("AccountId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("FamilyWallet.Domain.Models.Category", "Category")
                         .WithMany("Transactions")

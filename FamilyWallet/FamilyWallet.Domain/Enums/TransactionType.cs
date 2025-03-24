@@ -9,6 +9,7 @@ namespace FamilyWallet.Domain.Enums
     public enum TransactionType
     {
         Income,
-        Expense
+        Expense,
+        Transfer
     }
 }

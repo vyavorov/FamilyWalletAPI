@@ -38,7 +38,7 @@ namespace FamilyWallet.Application.Services
             {
                 return new ServiceResponse { Message = "Amount must be greater than 0", Success = false };
             }
-            if (account == null)
+            if (account == null && transactionDto.Type != TransactionType.Transfer)
             {
                 return new ServiceResponse { Message = "Account not found", Success = false };
             }
@@ -55,10 +55,33 @@ namespace FamilyWallet.Application.Services
                 Type = transactionDto.Type,
                 CategoryId = transactionDto.CategoryId,
                 Description = transactionDto.Description,
-                AccountId = account.Id
             };
-            await _transactionRepository.AddAsync(transaction);
 
+            if (transaction.Type == TransactionType.Transfer)
+            {
+                var fromAccount = await _accountRepository.GetByIdAsync(transactionDto.FromAccount.Value);
+                var toAccount = await _accountRepository.GetByIdAsync(transactionDto.ToAccount.Value);
+                if (fromAccount == null || toAccount == null)
+                {
+                    return new ServiceResponse { Message = "Account not found", Success = false };
+                }
+                if (fromAccount.Balance < transactionDto.Amount)
+                {
+                    return new ServiceResponse { Message = "Insufficient balance", Success = false };
+                }
+                transaction.FromAccountId = fromAccount.Id;
+                transaction.ToAccountId = toAccount.Id;
+                fromAccount.Balance -= transactionDto.Amount;
+                toAccount.Balance += transactionDto.Amount;
+                await _accountRepository.UpdateAsync(fromAccount);
+                await _accountRepository.UpdateAsync(toAccount);
+                await _transactionRepository.AddAsync(transaction);
+                return new ServiceResponse { Message = "Transfer completed successfully", Success = true };
+            }
+            else
+            {
+                transaction.AccountId = account.Id;
+            }
             if (transactionDto.Type == TransactionType.Expense)
             {
                 user.Balance -= transactionDto.Amount;

@@ -17,6 +17,8 @@ namespace FamilyWallet.Domain.DTOs
         public TransactionType Type { get; set; }
         public int CategoryId { get; set; }
         public string? Description { get; set; }
-        public int AccountId { get; set; }
+        public int? AccountId { get; set; }
+        public int? FromAccount { get; set; }
+        public int? ToAccount { get; set; }
     }
 }
