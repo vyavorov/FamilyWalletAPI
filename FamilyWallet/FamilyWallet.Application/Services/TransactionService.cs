@@ -59,8 +59,8 @@ namespace FamilyWallet.Application.Services
 
             if (transaction.Type == TransactionType.Transfer)
             {
-                var fromAccount = await _accountRepository.GetByIdAsync(transactionDto.FromAccount.Value);
-                var toAccount = await _accountRepository.GetByIdAsync(transactionDto.ToAccount.Value);
+                var fromAccount = await _accountRepository.GetByIdAsync(transactionDto.FromAccountId.Value);
+                var toAccount = await _accountRepository.GetByIdAsync(transactionDto.ToAccountId.Value);
                 if (fromAccount == null || toAccount == null)
                 {
                     return new ServiceResponse { Message = "Account not found", Success = false };
@@ -110,6 +110,7 @@ namespace FamilyWallet.Application.Services
                     await _familyGroupRepository.UpdateAsync(familyGroup);
                 }
             }
+            await _transactionRepository.AddAsync(transaction);
             return new ServiceResponse { Message = "Transaction added successfully", Success = true };
         }
 
