@@ -282,7 +282,9 @@ namespace FamilyWallet.Application.Services
                 Type = t.Type,
                 Date = t.Date,
                 CategoryId = t.CategoryId,
-                AccountId = t.AccountId
+                AccountId = t.AccountId,
+                FromAccountId = t.FromAccountId,
+                ToAccountId = t.ToAccountId
             }).ToList();
 
             return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
@@ -305,7 +307,7 @@ namespace FamilyWallet.Application.Services
             {
                 return new ServiceResponse { Message = "Amount must be greater than 0", Success = false };
             }
-            if (account == null)
+            if (account == null && transactionDto.Type != TransactionType.Transfer)
             {
                 return new ServiceResponse { Message = "Account not found", Success = false };
             }
@@ -313,19 +315,60 @@ namespace FamilyWallet.Application.Services
             {
                 return new ServiceResponse { Message = "Insufficient balance", Success = false };
             }
-            if (transactionDto.Type == TransactionType.Expense)
+            if (transactionDto.Type != TransactionType.Transfer && transaction.AccountId != transactionDto.AccountId)
             {
-                user.Balance += transaction.Amount;
-                account.Balance += transaction.Amount;
-                user.Balance -= transactionDto.Amount;
-                account.Balance -= transactionDto.Amount;
+                var oldAccount = await _accountRepository.GetByIdAsync(transaction.AccountId);
+                if (oldAccount == null)
+                {
+                    return new ServiceResponse { Message = "Account not found", Success = false };
+                }
+                if (transaction.Type == TransactionType.Income)
+                {
+                    account.Balance += transactionDto.Amount;
+                    oldAccount.Balance -= transactionDto.Amount;
+                }
+                else if (transaction.Type == TransactionType.Expense)
+                {
+                    account.Balance -= transactionDto.Amount;
+                    oldAccount.Balance += transactionDto.Amount;
+                }
             }
-            else if (transactionDto.Type == TransactionType.Income)
+            else
             {
-                user.Balance -= transaction.Amount;
-                account.Balance -= transaction.Amount;
-                user.Balance += transactionDto.Amount;
-                account.Balance += transactionDto.Amount;
+                if (transactionDto.Type == TransactionType.Expense)
+                {
+                    user.Balance += transaction.Amount;
+                    account.Balance += transaction.Amount;
+                    user.Balance -= transactionDto.Amount;
+                    account.Balance -= transactionDto.Amount;
+                }
+                else if (transactionDto.Type == TransactionType.Income)
+                {
+                    user.Balance -= transaction.Amount;
+                    account.Balance -= transaction.Amount;
+                    user.Balance += transactionDto.Amount;
+                    account.Balance += transactionDto.Amount;
+                }
+                else if (transactionDto.Type == TransactionType.Transfer)
+                {
+                    var fromAccount = await _accountRepository.GetByIdAsync(transactionDto.FromAccountId);
+                    var toAccount = await _accountRepository.GetByIdAsync(transactionDto.ToAccountId);
+
+                    if (fromAccount == null || toAccount == null)
+                    {
+                        return new ServiceResponse { Message = "Account not found", Success = false };
+                    }
+                    if (fromAccount.Balance < transactionDto.Amount)
+                    {
+                        return new ServiceResponse { Message = "Insufficient balance", Success = false };
+                    }
+                    fromAccount.Balance += transaction.Amount;
+                    toAccount.Balance -= transaction.Amount;
+                    fromAccount.Balance -= transactionDto.Amount;
+                    toAccount.Balance += transactionDto.Amount;
+                    await _accountRepository.UpdateAsync(fromAccount);
+                    await _accountRepository.UpdateAsync(toAccount);
+                }
             }
             transaction.UserId = transactionDto.UserId;
             transaction.Amount = transactionDto.Amount;
