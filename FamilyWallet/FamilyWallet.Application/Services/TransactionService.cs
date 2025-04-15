@@ -123,26 +123,46 @@ namespace FamilyWallet.Application.Services
             }
             var user = await _userRepository.GetByIdAsync(transaction.UserId);
             var account = await _accountRepository.GetByIdAsync(transaction.AccountId);
+            var toAccount = await _accountRepository.GetByIdAsync(transaction.ToAccountId);
+            var fromAccount = await _accountRepository.GetByIdAsync(transaction.FromAccountId);
             if (user == null)
             {
                 return new ServiceResponse { Message = "User not found", Success = false };
             }
-            if (account == null)
+            if (account == null && transaction.Type != TransactionType.Transfer)
             {
                 return new ServiceResponse { Message = "Account not found", Success = false };
             }
             if (transaction.Type == TransactionType.Expense)
             {
                 user.Balance += transaction.Amount;
-                account.Balance += transaction.Amount;
+                account!.Balance += transaction.Amount;
             }
             else if (transaction.Type == TransactionType.Income)
             {
                 user.Balance -= transaction.Amount;
-                account.Balance -= transaction.Amount;
+                account!.Balance -= transaction.Amount;
+            }
+            else
+            {
+                if (fromAccount == null || toAccount == null)
+                {
+                    return new ServiceResponse { Message = "Account not found", Success = false };
+                }
+                fromAccount.Balance += transaction.Amount;
+                toAccount.Balance -= transaction.Amount;
+                
             }
             await _userRepository.UpdateAsync(user);
-            await _accountRepository.UpdateAsync(account);
+            if (account != null)
+            {
+                await _accountRepository.UpdateAsync(account);
+            }
+            else if (fromAccount != null && toAccount != null)
+            {
+                await _accountRepository.UpdateAsync(fromAccount);
+                await _accountRepository.UpdateAsync(toAccount);
+            }
             await _transactionRepository.DeleteAsync(transactionId);
             return new ServiceResponse { Message = "Transaction deleted successfully", Success = true };
         }
