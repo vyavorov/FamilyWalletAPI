@@ -35,6 +35,7 @@ builder.Services.AddScoped<IFamilyGroupService, FamilyGroupService>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

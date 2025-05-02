@@ -50,5 +50,14 @@ namespace FamilyWallet.Application.Repositories
         {
             return await _context.Transactions.Where(t => t.UserId == userId && t.Type == TransactionType.Income && t.Amount > 0).SumAsync(t => t.Amount);
         }
+
+        public async Task<List<Transaction>> GetTransactionsForMonthAsync(int userId, int year, int month)
+        {
+            return await _context.Transactions
+                .Include(t => t.Category)
+                .Where(t => t.UserId == userId && t.Date.Year == year && t.Date.Month == month)
+                .OrderByDescending(t => t.Date)
+                .ToListAsync();
+        }
     }
 }
