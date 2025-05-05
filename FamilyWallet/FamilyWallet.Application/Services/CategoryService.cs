@@ -130,5 +130,21 @@ namespace FamilyWallet.Application.Services
             await categoryRepository.UpdateAsync(category);
             return new ServiceResponse { Message = "Category updated successfully", Success = true };
         }
+
+        public async Task<ServiceResponse<IEnumerable<CategoryDto>>> GetExpenseCategoriesByUsage(int userId)
+        {
+            var categories = await categoryRepository.GetExpenseCategoriesOrderedByUsageAsync(userId);
+
+            var categoriesDto = categories.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                UserId = c.UserId,
+                FamilyGroupId = c.FamilyGroupId
+            });
+
+            return new ServiceResponse<IEnumerable<CategoryDto>> { Data = categoriesDto, Success = true };
+        }
+
     }
 }

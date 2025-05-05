@@ -73,5 +73,20 @@ namespace FamilyWallet.API.Controllers
             }
             return Ok(response);
         }
+
+        [HttpGet("expenses/ordered")]
+        [Authorize]
+        public async Task<IActionResult> GetExpenseCategoriesByUsage()
+        {
+            var userIdClaim = User.FindFirst("userId");
+            if (userIdClaim == null) return Unauthorized("User ID not found");
+            int userId = int.Parse(userIdClaim.Value);
+
+            var response = await _categoryService.GetExpenseCategoriesByUsage(userId);
+            if (!response.Success) return NotFound(response.Message);
+
+            return Ok(response.Data);
+        }
+
     }
 }

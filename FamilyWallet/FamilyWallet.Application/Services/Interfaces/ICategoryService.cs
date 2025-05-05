@@ -20,5 +20,8 @@ namespace FamilyWallet.Application.Services.Interfaces
         Task<ServiceResponse> DeleteCategoryAsync(int categoryId);
 
         Task<ServiceResponse<IEnumerable<CategoryDto>>> GetAllCategories();
+
+        Task<ServiceResponse<IEnumerable<CategoryDto>>> GetExpenseCategoriesByUsage(int userId);
+
     }
 }
