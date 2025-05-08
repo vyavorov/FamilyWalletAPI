@@ -1,2 +1,29 @@
-# FamilyWalletAPI
-FamilyWallet is a modern web application designed to help individuals and families efficiently manage their finances. With an intuitive interface and powerful features, FamilyWallet allows users to track their income, expenses, and overall financial health with ease.
+# FamilyWallet API
+
+RESTful Web API за управление на лични и семейни финанси, изградена с .NET 8.
+
+## 🛠 Технологии
+- ASP.NET Core Web API (.NET 8)
+- Entity Framework Core + PostgreSQL
+- JWT Authentication
+- Docker (контейнеризация)
+
+---
+
+## 🚀 Стартиране с Docker
+
+### 1. Клонирай репото
+
+```bash```
+git clone https://github.com/your-username/familywallet.git
+cd familywallet
+
+
+### 2. Построй Docker image-а
+
+```bash```
+docker build -t familywallet-api 
+
+### 3. Стартирай контейнер
+```bash```
+docker run -d -p 5095:8080 --name familywallet-container familywallet-api
