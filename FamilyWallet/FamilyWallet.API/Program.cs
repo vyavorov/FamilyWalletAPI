@@ -42,7 +42,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin",
+    options.AddPolicy("_myAllowSpecificOrigins",
         builder => builder
             .WithOrigins("http://213.91.236.205:5096")
             .AllowAnyHeader()
