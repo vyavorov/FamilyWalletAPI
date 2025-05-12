@@ -7,6 +7,7 @@ using FamilyWallet.Application.Services;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using FamilyWallet.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,5 +98,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MigrateDatabase();
 
 app.Run();
