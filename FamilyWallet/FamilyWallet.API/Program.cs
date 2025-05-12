@@ -40,10 +40,14 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-builder.Services.AddCors(p => p.AddPolicy("AllCors", builder =>
+builder.Services.AddCors(options =>
 {
-    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder
+            .WithOrigins("http://213.91.236.205:5096")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
 
 var jwtKey = builder.Configuration["Jwt:Key"] ?? Environment.GetEnvironmentVariable("FAMILY_WALLET_JWT_KEY");
 
