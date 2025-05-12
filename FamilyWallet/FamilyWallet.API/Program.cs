@@ -49,6 +49,7 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod());
 });
 
+
 var jwtKey = builder.Configuration["Jwt:Key"] ?? Environment.GetEnvironmentVariable("FAMILY_WALLET_JWT_KEY");
 
 if (string.IsNullOrEmpty(jwtKey))
