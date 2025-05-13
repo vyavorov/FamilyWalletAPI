@@ -121,7 +121,7 @@ namespace FamilyWallet.Application.Services
                 _config["Jwt:Issuer"],
                 _config["Jwt:Issuer"],
                 claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddDays(14),
                 signingCredentials: creds
             );
 
