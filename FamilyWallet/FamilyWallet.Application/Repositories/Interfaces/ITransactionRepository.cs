@@ -20,6 +20,8 @@ namespace FamilyWallet.Application.Repositories.Interfaces
         Task<List<Transaction>> GetTransactionsForMonthAsync(int userId, int year, int month);
 
         Task<decimal> GetExpensesTotalForDateAsync(int userId, DateTime date);
+        Task<decimal> GetExpensesTotalForMonthAsync(int userId, DateTime date);
+
 
     }
 }

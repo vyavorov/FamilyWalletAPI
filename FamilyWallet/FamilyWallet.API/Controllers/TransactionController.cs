@@ -170,5 +170,19 @@ namespace FamilyWallet.API.Controllers
             var total = await _transactionService.GetExpensesForDateAsync(userId, date);
             return Ok(new { total });
         }
+
+        [HttpGet("spent-so-far")]
+        public async Task<IActionResult> GetSpentSoFarThisMonth()
+        {
+            var userIdClaim = User.FindFirst("userId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+            var total = await _transactionService.GetExpensesForMonthAsync(userId, DateTime.UtcNow);
+            return Ok(new { total });
+        }
     }
 }
