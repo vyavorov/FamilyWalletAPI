@@ -3,6 +3,7 @@ using FamilyWallet.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace FamilyWallet.API.Controllers
 {
@@ -33,6 +34,7 @@ namespace FamilyWallet.API.Controllers
         [HttpPost("set-or-update")]
         public async Task<IActionResult> SetOrUpdate([FromBody] MonthlyBudgetSettings settings)
         {
+            Console.WriteLine($"Incoming settings: {JsonSerializer.Serialize(settings)}");
             if (settings == null)
             {
                 return BadRequest("Settings cannot be null");

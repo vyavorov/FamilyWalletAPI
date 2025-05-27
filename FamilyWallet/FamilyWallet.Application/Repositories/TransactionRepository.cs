@@ -43,6 +43,7 @@ namespace FamilyWallet.Application.Repositories
 
         public async Task<decimal> GetExpensesTotalForDateAsync(int userId, DateTime date)
         {
+            date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
             return await _context.Transactions
                 .Where(t =>
                     t.UserId == userId &&

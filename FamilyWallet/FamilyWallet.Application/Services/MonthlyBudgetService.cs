@@ -37,5 +37,6 @@ namespace FamilyWallet.Application.Services
                 existing.SavingGoal = settings.SavingGoal;
                 await _repository.UpdateAsync(existing);
             }
+        }
     }
 }
