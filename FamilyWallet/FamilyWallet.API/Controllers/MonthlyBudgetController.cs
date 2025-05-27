@@ -34,7 +34,9 @@ namespace FamilyWallet.API.Controllers
         public async Task<IActionResult> SetOrUpdate([FromBody] MonthlyBudgetSettings settings)
         {
             if (settings == null)
+            {
                 return BadRequest("Settings cannot be null");
+            }
             var userIdClaim = User.FindFirst("userId");
 
             if (userIdClaim == null)

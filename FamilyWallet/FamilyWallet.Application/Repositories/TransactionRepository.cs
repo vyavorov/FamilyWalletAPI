@@ -41,6 +41,16 @@ namespace FamilyWallet.Application.Repositories
             return await _context.Transactions.Where(t => t.UserId == userId).OrderByDescending(t => t.Date).ToListAsync();
         }
 
+        public async Task<decimal> GetExpensesTotalForDateAsync(int userId, DateTime date)
+        {
+            return await _context.Transactions
+                .Where(t =>
+                    t.UserId == userId &&
+                    t.Type == TransactionType.Expense &&
+                    t.Date.Date == date.Date)
+                .SumAsync(t => (decimal?)t.Amount) ?? 0m;
+        }
+
         public async Task<decimal> GetTotalExpenseAsync(int userId)
         {
             return await _context.Transactions.Where(t => t.UserId == userId && t.Type == TransactionType.Expense && t.Amount > 0).SumAsync(t => t.Amount);
