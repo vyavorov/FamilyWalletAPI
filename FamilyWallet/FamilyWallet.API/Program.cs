@@ -90,7 +90,10 @@ var app = builder.Build();
 
 app.UseCors(MyAllowSpecificOrigins);
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
