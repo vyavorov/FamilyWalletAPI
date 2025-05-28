@@ -98,11 +98,18 @@ namespace FamilyWallet.Application.Services
 
         public async Task<ServiceResponse<IEnumerable<CategoryDto>>> GetCategoriesByUserAsync(int userId)
         {
-            var categories = await categoryRepository.GetCategoriesByUserIdAsync(userId);
+            var categories = await categoryRepository.GetCategoriesByUserIdOrderedByUsageAsync(userId);
+
             if (!categories.Any())
             {
-                return new ServiceResponse<IEnumerable<CategoryDto>> { Message = "No categories found", Success = true, Data = new List<CategoryDto>() };
+                return new ServiceResponse<IEnumerable<CategoryDto>>
+                {
+                    Message = "No categories found",
+                    Success = true,
+                    Data = new List<CategoryDto>()
+                };
             }
+
             var categoriesDto = categories.Select(c => new CategoryDto
             {
                 Id = c.Id,
@@ -110,7 +117,12 @@ namespace FamilyWallet.Application.Services
                 UserId = c.UserId,
                 FamilyGroupId = c.FamilyGroupId,
             });
-            return new ServiceResponse<IEnumerable<CategoryDto>> { Data = categoriesDto, Success = true };
+
+            return new ServiceResponse<IEnumerable<CategoryDto>>
+            {
+                Data = categoriesDto,
+                Success = true
+            };
         }
 
         public async Task<ServiceResponse<CategoryDto>> GetCategoryByIdAsync(int categoryId)
