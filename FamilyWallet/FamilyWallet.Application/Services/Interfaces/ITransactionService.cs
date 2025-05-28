@@ -22,5 +22,9 @@ namespace FamilyWallet.Application.Services.Interfaces
         Task<ServiceResponse> DeleteTransactionAsync(int transactionId);
 
         Task<ServiceResponse<IEnumerable<TransactionDto>>> GetAllTransactions();
+
+        Task<decimal> GetExpensesForDateAsync(int userId, DateTime date);
+        Task<decimal> GetExpensesForMonthAsync(int userId, DateTime date);
+
     }
 }

@@ -10,7 +10,7 @@ namespace FamilyWallet.Application.Services.Interfaces
 {
     public interface ICategoryService
     {
-        Task<ServiceResponse> AddCategoryAsync(CategoryDto categoryDto);
+        Task<ServiceResponse<CategoryDto>> AddCategoryAsync(CategoryDto categoryDto);
         Task<ServiceResponse<IEnumerable<CategoryDto>>> GetCategoriesByUserAsync(int userId);
         Task<ServiceResponse<IEnumerable<CategoryDto>>> GetCategoriesByFamilyGroupAsync(int familyGroupId);
 

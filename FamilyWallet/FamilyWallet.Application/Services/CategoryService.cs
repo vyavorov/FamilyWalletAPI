@@ -21,12 +21,12 @@ namespace FamilyWallet.Application.Services
             this.categoryRepository = categoryRepository;
             this.userRepository = userRepository;
         }
-        public async Task<ServiceResponse> AddCategoryAsync(CategoryDto categoryDto)
+        public async Task<ServiceResponse<CategoryDto>> AddCategoryAsync(CategoryDto categoryDto)
         {
             var user = await userRepository.GetByIdAsync(categoryDto.UserId);
             if (user == null)
             {
-                return new ServiceResponse { Message = "User not found", Success = false };
+                return new ServiceResponse<CategoryDto> { Message = "User not found", Success = false };
             }
             var category = new Category
             {
@@ -36,7 +36,18 @@ namespace FamilyWallet.Application.Services
             };
             await categoryRepository.AddAsync(category);
 
-            return new ServiceResponse { Message = "Category added successfully", Success = true };
+            return new ServiceResponse<CategoryDto>
+            {
+                Message = "Category added successfully",
+                Success = true,
+                Data = new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    UserId = category.UserId,
+                    FamilyGroupId = category.FamilyGroupId
+                }
+            };
         }
 
         public async Task<ServiceResponse> DeleteCategoryAsync(int categoryId)
@@ -87,11 +98,18 @@ namespace FamilyWallet.Application.Services
 
         public async Task<ServiceResponse<IEnumerable<CategoryDto>>> GetCategoriesByUserAsync(int userId)
         {
-            var categories = await categoryRepository.GetCategoriesByUserIdAsync(userId);
+            var categories = await categoryRepository.GetCategoriesByUserIdOrderedByUsageAsync(userId);
+
             if (!categories.Any())
             {
-                return new ServiceResponse<IEnumerable<CategoryDto>> { Message = "No categories found", Success = true, Data = new List<CategoryDto>() };
+                return new ServiceResponse<IEnumerable<CategoryDto>>
+                {
+                    Message = "No categories found",
+                    Success = true,
+                    Data = new List<CategoryDto>()
+                };
             }
+
             var categoriesDto = categories.Select(c => new CategoryDto
             {
                 Id = c.Id,
@@ -99,7 +117,12 @@ namespace FamilyWallet.Application.Services
                 UserId = c.UserId,
                 FamilyGroupId = c.FamilyGroupId,
             });
-            return new ServiceResponse<IEnumerable<CategoryDto>> { Data = categoriesDto, Success = true };
+
+            return new ServiceResponse<IEnumerable<CategoryDto>>
+            {
+                Data = categoriesDto,
+                Success = true
+            };
         }
 
         public async Task<ServiceResponse<CategoryDto>> GetCategoryByIdAsync(int categoryId)

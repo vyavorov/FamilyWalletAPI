@@ -3,6 +3,7 @@ using FamilyWallet.Domain.DTOs;
 using FamilyWallet.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FamilyWallet.API.Controllers
 {
@@ -153,6 +154,35 @@ namespace FamilyWallet.API.Controllers
                 return NotFound(response.Message);
             }
             return Ok(response.Data);
+        }
+
+        [HttpGet("daily")]
+        public async Task<IActionResult> GetExpensesForDate([FromQuery] DateTime date)
+        {
+            var userIdClaim = User.FindFirst("userId");
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+            var total = await _transactionService.GetExpensesForDateAsync(userId, date);
+            return Ok(new { total });
+        }
+
+        [HttpGet("spent-so-far")]
+        public async Task<IActionResult> GetSpentSoFarThisMonth()
+        {
+            var userIdClaim = User.FindFirst("userId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+            var total = await _transactionService.GetExpensesForMonthAsync(userId, DateTime.UtcNow);
+            return Ok(new { total });
         }
     }
 }

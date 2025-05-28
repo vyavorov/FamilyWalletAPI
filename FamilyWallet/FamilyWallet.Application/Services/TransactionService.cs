@@ -188,6 +188,16 @@ namespace FamilyWallet.Application.Services
             return new ServiceResponse<IEnumerable<TransactionDto>> { Success = true, Data = transactionDtos };
         }
 
+        public async Task<decimal> GetExpensesForDateAsync(int userId, DateTime date)
+        {
+            return await _transactionRepository.GetExpensesTotalForDateAsync(userId, date);
+        }
+
+        public async Task<decimal> GetExpensesForMonthAsync(int userId, DateTime date)
+        {
+            return await _transactionRepository.GetExpensesTotalForMonthAsync(userId, date);
+        }
+
         public async Task<ServiceResponse<TransactionDto>> GetTransactionByIdAsync(int transactionId)
         {
             var transaction = await _transactionRepository.GetByIdAsync(transactionId);

@@ -33,6 +33,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFamilyGroupService, FamilyGroupService>();
+builder.Services.AddScoped<IMonthlyBudgetService, MonthlyBudgetService>();
+builder.Services.AddScoped<IMonthlyBudgetSettingsRepository, MonthlyBudgetSettingsRepository>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -90,7 +92,10 @@ var app = builder.Build();
 
 app.UseCors(MyAllowSpecificOrigins);
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

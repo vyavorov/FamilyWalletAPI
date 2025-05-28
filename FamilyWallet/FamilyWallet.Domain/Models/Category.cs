@@ -22,5 +22,7 @@ namespace FamilyWallet.Domain.Models
 
         [ForeignKey(nameof(UserId))]
         public User User { get; set; } = null!;
+
+        public bool IsGlobal { get; set; } = false;
     }
 }

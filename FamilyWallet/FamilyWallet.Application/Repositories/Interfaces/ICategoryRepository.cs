@@ -15,6 +15,6 @@ namespace FamilyWallet.Application.Repositories.Interfaces
 
         Task<IEnumerable<Category>> GetExpenseCategoriesOrderedByUsageAsync(int userId);
 
-
+        Task<IEnumerable<Category>> GetCategoriesByUserIdOrderedByUsageAsync(int userId);
     }
 }
