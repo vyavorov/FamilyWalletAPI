@@ -21,12 +21,12 @@ namespace FamilyWallet.Application.Services
             this.categoryRepository = categoryRepository;
             this.userRepository = userRepository;
         }
-        public async Task<ServiceResponse> AddCategoryAsync(CategoryDto categoryDto)
+        public async Task<ServiceResponse<CategoryDto>> AddCategoryAsync(CategoryDto categoryDto)
         {
             var user = await userRepository.GetByIdAsync(categoryDto.UserId);
             if (user == null)
             {
-                return new ServiceResponse { Message = "User not found", Success = false };
+                return new ServiceResponse<CategoryDto> { Message = "User not found", Success = false };
             }
             var category = new Category
             {
@@ -36,7 +36,18 @@ namespace FamilyWallet.Application.Services
             };
             await categoryRepository.AddAsync(category);
 
-            return new ServiceResponse { Message = "Category added successfully", Success = true };
+            return new ServiceResponse<CategoryDto>
+            {
+                Message = "Category added successfully",
+                Success = true,
+                Data = new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    UserId = category.UserId,
+                    FamilyGroupId = category.FamilyGroupId
+                }
+            };
         }
 
         public async Task<ServiceResponse> DeleteCategoryAsync(int categoryId)
