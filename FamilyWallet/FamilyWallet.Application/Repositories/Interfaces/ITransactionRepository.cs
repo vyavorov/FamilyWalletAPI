@@ -1,5 +1,6 @@
 ﻿using FamilyWallet.Domain.Enums;
 using FamilyWallet.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,9 @@ namespace FamilyWallet.Application.Repositories.Interfaces
 
         Task<decimal> GetExpensesTotalForDateAsync(int userId, DateTime date);
         Task<decimal> GetExpensesTotalForMonthAsync(int userId, DateTime date);
-
+        Task<decimal> GetTotalIncomeForMonthAsync(int userId, int month, int year);
+        Task<decimal> GetTotalExpensesForMonthAsync(int userId, int month, int year);
+        public Task<decimal> GetTotalExpensesUntilDateAsync(int userId, DateTime date);
 
     }
 }

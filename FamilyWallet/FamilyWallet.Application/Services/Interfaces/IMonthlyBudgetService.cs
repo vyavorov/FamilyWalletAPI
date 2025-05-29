@@ -1,4 +1,5 @@
-﻿using FamilyWallet.Domain.Models;
+﻿using FamilyWallet.Domain.DTOs;
+using FamilyWallet.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace FamilyWallet.Application.Services.Interfaces
         Task<MonthlyBudgetSettings> GetCurrentAsync(int userId);
 
         Task SetOrUpdateAsync(MonthlyBudgetSettings settings);
+        Task<DashboardDataDto> GetBudgetOverviewAsync(int userId);
+
     }
 }

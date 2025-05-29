@@ -51,5 +51,19 @@ namespace FamilyWallet.API.Controllers
             await _monthlyBudgetService.SetOrUpdateAsync(settings);
             return NoContent();
         }
+
+        [HttpGet("overview")]
+        public async Task<IActionResult> GetOverview()
+        {
+            var userIdClaim = User.FindFirst("userId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+            var overview = await _monthlyBudgetService.GetBudgetOverviewAsync(userId);
+            return Ok(overview);
+        }
     }
 }
