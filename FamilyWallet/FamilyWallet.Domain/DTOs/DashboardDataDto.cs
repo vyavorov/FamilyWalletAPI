@@ -15,5 +15,6 @@ namespace FamilyWallet.Domain.DTOs
         public decimal RemainingAmount { get; set; }
         public decimal DailyBudget { get; set; }
         public int DaysLeft { get; set; }
+        public decimal CarriedOverAmount { get; set; }
     }
 }

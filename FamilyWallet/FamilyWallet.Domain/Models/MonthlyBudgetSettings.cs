@@ -33,6 +33,9 @@ namespace FamilyWallet.Domain.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal SavingGoal { get; set; }
 
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal CarriedOverAmount { get; set; } = 0;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
