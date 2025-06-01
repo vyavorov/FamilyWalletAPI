@@ -100,5 +100,18 @@ namespace FamilyWallet.Application.Repositories
                 .OrderByDescending(t => t.Date)
                 .ToListAsync();
         }
+
+        public async Task<decimal> GetTotalExpensesUntilDateInMonthAsync(int userId, int month, int year, DateTime date)
+        {
+            return await _context.Transactions
+                .Where(t =>
+                    t.UserId == userId &&
+                    t.Type == TransactionType.Expense &&
+                    t.Date.Year == year &&
+                    t.Date.Month == month &&
+                    t.Date.Date <= date.Date
+                )
+                .SumAsync(t => (decimal?)t.Amount) ?? 0;
+        }
     }
 }

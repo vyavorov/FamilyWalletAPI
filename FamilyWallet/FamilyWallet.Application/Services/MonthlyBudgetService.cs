@@ -19,7 +19,6 @@ namespace FamilyWallet.Application.Services
             _settingsRepository = repository;
             _transactionRepository = transactionRepository;
         }
-
         public async Task<DashboardDataDto> GetBudgetOverviewAsync(int userId)
         {
             var now = DateTime.UtcNow;
@@ -32,9 +31,16 @@ namespace FamilyWallet.Application.Services
             decimal carriedOver = settings?.CarriedOverAmount ?? 0;
 
             var income = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, month, year);
-            var expensesUntilYesterday = await _transactionRepository.GetTotalExpensesUntilDateAsync(userId, today.AddDays(-1));
 
-            decimal spendable = income + carriedOver - savingGoal;
+            var expensesUntilYesterday = await _transactionRepository
+                .GetTotalExpensesUntilDateInMonthAsync(userId, month, year, today.AddDays(-1));
+
+            decimal availableFunds = income + carriedOver;
+
+            decimal spendable = availableFunds > savingGoal
+                ? availableFunds - savingGoal
+                : 0;
+
             decimal remaining = spendable - expensesUntilYesterday;
 
             int totalDays = DateTime.DaysInMonth(year, month);
@@ -54,8 +60,6 @@ namespace FamilyWallet.Application.Services
                 DailyBudget = dailyBudget
             };
         }
-
-
 
         public async Task<MonthlyBudgetSettings> GetCurrentAsync(int userId)
         {
