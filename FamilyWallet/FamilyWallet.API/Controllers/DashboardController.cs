@@ -19,7 +19,7 @@ namespace FamilyWallet.API.Controllers
             _dashboardService = dashboardService;
         }
 
-        [HttpGet]
+        [HttpGet("summary")]
         public async Task<IActionResult> GetDashboardData()
         {
             var userIdClaim = User.FindFirst("userId");
@@ -29,8 +29,14 @@ namespace FamilyWallet.API.Controllers
                 return Unauthorized("User ID not found in token");
             }
             int userId = int.Parse(userIdClaim.Value);
-            var income = await _transactionRepository.GetTotalIncomeAsync(userId);
-            var expense = await _transactionRepository.GetTotalExpenseAsync(userId);
+
+            var now = DateTime.UtcNow;
+            int month = now.Month;
+            int year = now.Year;
+
+            var income = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, month, year);
+            var expense = await _transactionRepository.GetTotalExpensesForMonthAsync(userId, month, year);
+
             var totalBalance = income - expense;
 
             return Ok(new { income, expense, totalBalance });

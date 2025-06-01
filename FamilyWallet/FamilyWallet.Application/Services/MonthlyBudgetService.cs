@@ -31,21 +31,14 @@ namespace FamilyWallet.Application.Services
             decimal carriedOver = settings?.CarriedOverAmount ?? 0;
 
             var income = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, month, year);
-
             var expensesUntilYesterday = await _transactionRepository
                 .GetTotalExpensesUntilDateInMonthAsync(userId, month, year, today.AddDays(-1));
 
-            decimal availableFunds = income + carriedOver;
-
-            decimal spendable = availableFunds > savingGoal
-                ? availableFunds - savingGoal
-                : 0;
-
+            decimal spendable = income + carriedOver - savingGoal;
             decimal remaining = spendable - expensesUntilYesterday;
 
             int totalDays = DateTime.DaysInMonth(year, month);
             int daysLeft = totalDays - today.Day + 1;
-
             decimal dailyBudget = daysLeft > 0 ? remaining / daysLeft : 0;
 
             return new DashboardDataDto
