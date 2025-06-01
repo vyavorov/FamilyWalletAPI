@@ -1,4 +1,5 @@
-﻿using FamilyWallet.Application.Repositories.Interfaces;
+﻿using FamilyWallet.Application.Repositories;
+using FamilyWallet.Application.Repositories.Interfaces;
 using FamilyWallet.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,13 @@ namespace FamilyWallet.API.Controllers
     {
         private readonly ITransactionRepository _transactionRepository;
         private readonly IDashboardService _dashboardService;
+        private readonly IMonthlyBudgetSettingsRepository _monthlyBudgetSettingsRepository;
 
-        public DashboardController(ITransactionRepository transactionRepository, IDashboardService dashboardService)
+        public DashboardController(ITransactionRepository transactionRepository, IDashboardService dashboardService, IMonthlyBudgetSettingsRepository monthlyBudgetSettingsRepository)
         {
             _transactionRepository = transactionRepository;
             _dashboardService = dashboardService;
+            _monthlyBudgetSettingsRepository = monthlyBudgetSettingsRepository;
         }
 
         [HttpGet("summary")]
@@ -37,7 +40,10 @@ namespace FamilyWallet.API.Controllers
             var income = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, month, year);
             var expense = await _transactionRepository.GetTotalExpensesForMonthAsync(userId, month, year);
 
-            var totalBalance = income - expense;
+            var settings = await _monthlyBudgetSettingsRepository.GetForUserAndMonthAsync(userId, month, year);
+            decimal carriedOver = settings?.CarriedOverAmount ?? 0;
+
+            var totalBalance = income + carriedOver - expense;
 
             return Ok(new { income, expense, totalBalance });
         }
