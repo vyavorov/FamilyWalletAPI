@@ -48,7 +48,7 @@ namespace FamilyWallet.API.Controllers
             var totalBalance = income + carriedOver - expense;
             var balanceWithoutSavingGoal = totalBalance - savingGoal;
 
-            return Ok(new { income, expense, totalBalance, savingGoal });
+            return Ok(new { income, expense, balanceWithoutSavingGoal, savingGoal });
         }
 
         [HttpGet("monthly")]
