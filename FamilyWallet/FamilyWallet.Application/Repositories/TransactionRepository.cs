@@ -113,5 +113,11 @@ namespace FamilyWallet.Application.Repositories
                 )
                 .SumAsync(t => (decimal?)t.Amount) ?? 0;
         }
+
+        public async Task<decimal> GetSavings(int userId)
+        {
+            return await _context.Transactions.Where(t => t.UserId == userId && t.Account!.Name.ToLower() == "спестявания")
+                .SumAsync(t => (decimal?)t.Amount) ?? 0;
+        }
     }
 }

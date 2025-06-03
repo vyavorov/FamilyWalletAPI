@@ -39,13 +39,16 @@ namespace FamilyWallet.API.Controllers
 
             var income = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, month, year);
             var expense = await _transactionRepository.GetTotalExpensesForMonthAsync(userId, month, year);
+            var savings = await _transactionRepository.
 
             var settings = await _monthlyBudgetSettingsRepository.GetForUserAndMonthAsync(userId, month, year);
             decimal carriedOver = settings?.CarriedOverAmount ?? 0;
+            decimal savingGoal = settings?.SavingGoal ?? 0;
 
             var totalBalance = income + carriedOver - expense;
+            var balanceWithoutSavingGoal = totalBalance - savingGoal;
 
-            return Ok(new { income, expense, totalBalance });
+            return Ok(new { income, expense, totalBalance, savingGoal });
         }
 
         [HttpGet("monthly")]
