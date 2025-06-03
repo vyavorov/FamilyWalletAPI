@@ -26,5 +26,6 @@ namespace FamilyWallet.Application.Services.Interfaces
         Task<decimal> GetExpensesForDateAsync(int userId, DateTime date);
         Task<decimal> GetExpensesForMonthAsync(int userId, DateTime date);
 
+        Task<ServiceResponse<decimal>> GetSavingsForMonthAsync(int userId, int year, int month);
     }
 }

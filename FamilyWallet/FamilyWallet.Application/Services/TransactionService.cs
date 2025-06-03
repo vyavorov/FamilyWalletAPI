@@ -429,5 +429,27 @@ namespace FamilyWallet.Application.Services
             return new ServiceResponse { Message = "Transaction updated successfully", Success = true };
         }
 
+        public async Task<ServiceResponse<decimal>> GetSavingsForMonthAsync(int userId, int year, int month)
+        {
+            try
+            {
+                var savings = await _transactionRepository.GetSavingsForMonthAsync(userId, year, month);
+
+                return new ServiceResponse<decimal>
+                {
+                    Success = true,
+                    Data = savings
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse<decimal>
+                {
+                    Success = false,
+                    Message = $"Грешка при изчисляване на спестяванията: {ex.Message}"
+                };
+            }
+        }
+
     }
 }

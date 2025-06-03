@@ -114,10 +114,35 @@ namespace FamilyWallet.Application.Repositories
                 .SumAsync(t => (decimal?)t.Amount) ?? 0;
         }
 
-        public async Task<decimal> GetSavings(int userId)
+        public async Task<decimal> GetSavingsForMonthAsync(int userId, int year, int month)
         {
-            return await _context.Transactions.Where(t => t.UserId == userId && t.Account!.Name.ToLower() == "спестявания")
+            var incoming = await _context.Transactions
+                .Where(t =>
+                    t.UserId == userId &&
+                    t.Date.Year == year &&
+                    t.Date.Month == month &&
+                    (
+                        (t.Type == TransactionType.Income && t.Account != null && t.Account.Name.ToLower() == "спестявания") ||
+                        (t.Type == TransactionType.Transfer && t.ToAccount != null && t.ToAccount.Name.ToLower() == "спестявания")
+                    )
+                )
                 .SumAsync(t => (decimal?)t.Amount) ?? 0;
+
+            var outgoing = await _context.Transactions
+                .Where(t =>
+                    t.UserId == userId &&
+                    t.Date.Year == year &&
+                    t.Date.Month == month &&
+                    (
+                        (t.Type == TransactionType.Expense && t.Account != null && t.Account.Name.ToLower() == "спестявания") ||
+                        (t.Type == TransactionType.Transfer && t.FromAccount != null && t.FromAccount.Name.ToLower() == "спестявания")
+                    )
+                )
+                .SumAsync(t => (decimal?)t.Amount) ?? 0;
+
+            return incoming - outgoing;
         }
+
+
     }
 }

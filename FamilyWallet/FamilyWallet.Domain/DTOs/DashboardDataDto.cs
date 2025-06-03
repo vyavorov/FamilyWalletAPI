@@ -10,11 +10,12 @@ namespace FamilyWallet.Domain.DTOs
     {
         public decimal TotalIncome { get; set; }
         public decimal TotalExpenses { get; set; }
-        public decimal SavingGoal { get; set; }
+        public decimal DesiredSavingGoal { get; set; }
         public decimal SpendableAmount { get; set; }
         public decimal RemainingAmount { get; set; }
         public decimal DailyBudget { get; set; }
         public int DaysLeft { get; set; }
         public decimal CarriedOverAmount { get; set; }
+        public decimal TotalSavings { get; set; }
     }
 }

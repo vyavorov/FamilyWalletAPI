@@ -28,7 +28,7 @@ namespace FamilyWallet.Application.Repositories.Interfaces
 
         Task<decimal> GetTotalExpensesUntilDateInMonthAsync(int userId, int month, int year, DateTime date);
 
-        Task<decimal> GetSavings(int userId);
+        Task<decimal> GetSavingsForMonthAsync(int userId, int year, int month);
 
     }
 }

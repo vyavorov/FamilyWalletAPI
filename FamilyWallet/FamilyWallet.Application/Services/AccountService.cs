@@ -34,10 +34,6 @@ namespace FamilyWallet.Application.Services
                 Balance = accountDto.Balance,
                 FamilyGroupId = accountDto.FamilyGroupId,
             };
-            if (await _accountRepository.ExistsByNameAsync(account.Name))
-            {
-                return new ServiceResponse { Message = "Account already exists", Success = false };
-            }
             await _accountRepository.AddAsync(account);
             return new ServiceResponse { Success = true, Message="Account added successfuly"};
         }

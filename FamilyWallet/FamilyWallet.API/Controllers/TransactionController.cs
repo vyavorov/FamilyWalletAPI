@@ -116,8 +116,8 @@ namespace FamilyWallet.API.Controllers
         /// Getting transaction by Id
         /// </summary>
         /// 
-       [HttpGet("{transactionId}")]
-       public async Task<IActionResult>  GetTransactionByIdAsync(int transactionId)
+        [HttpGet("{transactionId}")]
+        public async Task<IActionResult> GetTransactionByIdAsync(int transactionId)
         {
             var response = await _transactionService.GetTransactionByIdAsync(transactionId);
             if (!response.Success)
@@ -184,5 +184,28 @@ namespace FamilyWallet.API.Controllers
             var total = await _transactionService.GetExpensesForMonthAsync(userId, DateTime.UtcNow);
             return Ok(new { total });
         }
+
+        [HttpGet("savings")]
+        public async Task<IActionResult> GetSavings()
+        {
+            var userIdClaim = User.FindFirst("userId");
+            if (userIdClaim == null)
+            { 
+                return Unauthorized(); 
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+
+            var now = DateTime.UtcNow;
+            var result = await _transactionService.GetSavingsForMonthAsync(userId, now.Year, now.Month);
+
+            if (!result.Success)
+            {
+                return StatusCode(500, result.Message);
+            }
+
+            return Ok(result.Data);
+        }
+
     }
 }

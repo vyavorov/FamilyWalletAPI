@@ -21,12 +21,10 @@ namespace FamilyWallet.API.Controllers
             _dashboardService = dashboardService;
             _monthlyBudgetSettingsRepository = monthlyBudgetSettingsRepository;
         }
-
         [HttpGet("summary")]
         public async Task<IActionResult> GetDashboardData()
         {
             var userIdClaim = User.FindFirst("userId");
-
             if (userIdClaim == null)
             {
                 return Unauthorized("User ID not found in token");
@@ -37,18 +35,32 @@ namespace FamilyWallet.API.Controllers
             int month = now.Month;
             int year = now.Year;
 
+            // Реални приходи и разходи
             var income = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, month, year);
             var expense = await _transactionRepository.GetTotalExpensesForMonthAsync(userId, month, year);
 
+            // Настройки за месеца
             var settings = await _monthlyBudgetSettingsRepository.GetForUserAndMonthAsync(userId, month, year);
             decimal carriedOver = settings?.CarriedOverAmount ?? 0;
-            decimal savingGoal = settings?.SavingGoal ?? 0;
+            decimal desiredSavingGoal = settings?.SavingGoal ?? 0;
 
-            var totalBalance = income + carriedOver - expense;
-            var balanceWithoutSavingGoal = totalBalance - savingGoal;
+            // Реално спестено: сума по сметка "Спестявания" за текущия месец
+            var realSavings = await _transactionRepository.GetSavingsForMonthAsync(userId, year, month);
 
-            return Ok(new { income, expense, balanceWithoutSavingGoal, savingGoal });
+            // Калкулация на баланса
+            decimal totalBalance = income + carriedOver - expense;
+            decimal balanceWithoutSavings = totalBalance - realSavings;
+
+            return Ok(new
+            {
+                income,
+                expense,
+                balanceWithoutSavingGoal = balanceWithoutSavings,
+                savingGoal = desiredSavingGoal,
+                realSavings = realSavings
+            });
         }
+
 
         [HttpGet("monthly")]
         public async Task<IActionResult> GetMonthlyDashboard([FromQuery] int year, [FromQuery] int month)
