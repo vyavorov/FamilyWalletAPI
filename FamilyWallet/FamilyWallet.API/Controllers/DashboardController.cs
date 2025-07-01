@@ -39,13 +39,23 @@ namespace FamilyWallet.API.Controllers
             var income = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, month, year);
             var expense = await _transactionRepository.GetTotalExpensesForMonthAsync(userId, month, year);
 
-            // Настройки за месеца
-            var settings = await _monthlyBudgetSettingsRepository.GetForUserAndMonthAsync(userId, month, year);
-            decimal carriedOver = settings?.CarriedOverAmount ?? 0;
-            decimal desiredSavingGoal = settings?.SavingGoal ?? 0;
-
             // Реално спестено: сума по сметка "Спестявания" за текущия месец
             var realSavings = await _transactionRepository.GetSavingsForMonthAsync(userId, year, month);
+
+            // Настройки за месеца
+            var settings = await _monthlyBudgetSettingsRepository.GetForUserAndMonthAsync(userId, month, year);
+            decimal desiredSavingGoal = settings?.SavingGoal ?? 0;
+
+            // Изчисляваме carriedOver винаги динамично на база миналия месец
+            int prevMonth = month == 1 ? 12 : month - 1;
+            int prevYear = month == 1 ? year - 1 : year;
+
+            var prevIncome = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, prevMonth, prevYear);
+            var prevExpenses = await _transactionRepository.GetTotalExpensesForMonthAsync(userId, prevMonth, prevYear);
+            var prevSavings = await _transactionRepository.GetSavingsForMonthAsync(userId, prevYear, prevMonth);
+
+            decimal carriedOver = prevIncome - prevExpenses - prevSavings;
+            if (carriedOver < 0) carriedOver = 0;
 
             // Калкулация на баланса
             decimal totalBalance = income + carriedOver - expense;
@@ -55,9 +65,10 @@ namespace FamilyWallet.API.Controllers
             {
                 income,
                 expense,
+                carriedOver,
                 balanceWithoutSavingGoal = balanceWithoutSavings,
                 savingGoal = desiredSavingGoal,
-                realSavings = realSavings
+                realSavings
             });
         }
 

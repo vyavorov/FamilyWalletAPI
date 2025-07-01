@@ -66,25 +66,19 @@ namespace FamilyWallet.Application.Services
         {
             var existing = await _settingsRepository.GetForUserAndMonthAsync(settings.UserId, settings.Month, settings.Year);
 
+            int previousMonth = settings.Month == 1 ? 12 : settings.Month - 1;
+            int previousYear = settings.Month == 1 ? settings.Year - 1 : settings.Year;
+
+            var incomePrev = await _transactionRepository.GetTotalIncomeForMonthAsync(settings.UserId, previousMonth, previousYear);
+            var expensesPrev = await _transactionRepository.GetTotalExpensesForMonthAsync(settings.UserId, previousMonth, previousYear);
+            var realSavingsPrev = await _transactionRepository.GetSavingsForMonthAsync(settings.UserId, previousYear, previousMonth);
+
+            decimal carriedOver = incomePrev - expensesPrev - realSavingsPrev;
+            if (carriedOver < 0) carriedOver = 0;
+
             if (existing == null)
             {
-                int previousMonth = settings.Month == 1 ? 12 : settings.Month - 1;
-                int previousYear = settings.Month == 1 ? settings.Year - 1 : settings.Year;
-
-                var previousSettings = await _settingsRepository.GetForUserAndMonthAsync(settings.UserId, previousMonth, previousYear);
-                decimal carriedOver = 0;
-
-                if (previousSettings != null)
-                {
-                    var incomePrev = await _transactionRepository.GetTotalIncomeForMonthAsync(settings.UserId, previousMonth, previousYear);
-                    var expensesPrev = await _transactionRepository.GetTotalExpensesForMonthAsync(settings.UserId, previousMonth, previousYear);
-
-                    carriedOver = incomePrev - expensesPrev - previousSettings.SavingGoal;
-                    if (carriedOver < 0) carriedOver = 0;
-                }
-
                 settings.CarriedOverAmount = carriedOver;
-
                 await _settingsRepository.AddAsync(settings);
             }
             else
