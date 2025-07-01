@@ -50,11 +50,15 @@ namespace FamilyWallet.API.Controllers
             int prevMonth = month == 1 ? 12 : month - 1;
             int prevYear = month == 1 ? year - 1 : year;
 
+            //Настройки за предния месец
+            var prevMonthSettings = await _monthlyBudgetSettingsRepository.GetForUserAndMonthAsync(userId, prevMonth, prevYear);
+            var prevCarriedOver = prevMonthSettings.CarriedOverAmount;
+
             var prevIncome = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, prevMonth, prevYear);
             var prevExpenses = await _transactionRepository.GetTotalExpensesForMonthAsync(userId, prevMonth, prevYear);
             var prevSavings = await _transactionRepository.GetSavingsForMonthAsync(userId, prevYear, prevMonth);
 
-            decimal carriedOver = prevIncome - prevExpenses - prevSavings;
+            decimal carriedOver = prevIncome + prevCarriedOver - prevExpenses - prevSavings;
             if (carriedOver < 0) carriedOver = 0;
 
             // Калкулация на баланса

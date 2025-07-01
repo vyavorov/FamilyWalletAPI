@@ -1,7 +1,9 @@
-﻿using FamilyWallet.Application.Repositories.Interfaces;
+﻿using FamilyWallet.Application.Repositories;
+using FamilyWallet.Application.Repositories.Interfaces;
 using FamilyWallet.Application.Services.Interfaces;
 using FamilyWallet.Domain.DTOs;
 using FamilyWallet.Domain.Models;
+using Microsoft.Exchange.WebServices.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,18 +64,23 @@ namespace FamilyWallet.Application.Services
             return await _settingsRepository.GetForUserAndMonthAsync(userId, now.Month, now.Year);
         }
 
-        public async Task SetOrUpdateAsync(MonthlyBudgetSettings settings)
+        //public async Task SetOrUpdateAsync(MonthlyBudgetSettings settings)
+        public async System.Threading.Tasks.Task SetOrUpdateAsync(MonthlyBudgetSettings settings)
+
         {
             var existing = await _settingsRepository.GetForUserAndMonthAsync(settings.UserId, settings.Month, settings.Year);
 
+
             int previousMonth = settings.Month == 1 ? 12 : settings.Month - 1;
             int previousYear = settings.Month == 1 ? settings.Year - 1 : settings.Year;
+            var prevMonthSettings = await _settingsRepository.GetForUserAndMonthAsync(settings.UserId, previousMonth, previousYear);
 
             var incomePrev = await _transactionRepository.GetTotalIncomeForMonthAsync(settings.UserId, previousMonth, previousYear);
             var expensesPrev = await _transactionRepository.GetTotalExpensesForMonthAsync(settings.UserId, previousMonth, previousYear);
             var realSavingsPrev = await _transactionRepository.GetSavingsForMonthAsync(settings.UserId, previousYear, previousMonth);
+            var prevCarriedOver = prevMonthSettings.CarriedOverAmount;
 
-            decimal carriedOver = incomePrev - expensesPrev - realSavingsPrev;
+            decimal carriedOver = prevCarriedOver + incomePrev - expensesPrev - realSavingsPrev;
             if (carriedOver < 0) carriedOver = 0;
 
             if (existing == null)
@@ -87,8 +94,5 @@ namespace FamilyWallet.Application.Services
                 await _settingsRepository.UpdateAsync(existing);
             }
         }
-
-
-
     }
 }
