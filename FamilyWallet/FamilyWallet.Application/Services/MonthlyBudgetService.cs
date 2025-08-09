@@ -29,7 +29,7 @@ namespace FamilyWallet.Application.Services
             var today = now.Date;
 
             var settings = await _settingsRepository.GetForUserAndMonthAsync(userId, month, year);
-            decimal desoredSavingGoal = settings?.SavingGoal ?? 0;
+            decimal desiredSavingGoal = settings?.SavingGoal ?? 0;
             decimal savingGoal = await _transactionRepository.GetSavingsForMonthAsync(userId, year, month);
             decimal carriedOver = settings?.CarriedOverAmount ?? 0;
 
@@ -48,7 +48,7 @@ namespace FamilyWallet.Application.Services
             {
                 TotalIncome = income,
                 TotalExpenses = expensesUntilYesterday,
-                DesiredSavingGoal = desoredSavingGoal,
+                DesiredSavingGoal = desiredSavingGoal,
                 CarriedOverAmount = carriedOver,
                 SpendableAmount = spendable,
                 RemainingAmount = remaining,

@@ -140,7 +140,8 @@ namespace FamilyWallet.Application.Repositories
                 )
                 .SumAsync(t => (decimal?)t.Amount) ?? 0;
 
-            return incoming - outgoing;
+            var net = incoming - outgoing;
+            return Math.Max(0m, net);
         }
 
 
