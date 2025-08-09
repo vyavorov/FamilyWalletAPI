@@ -25,4 +25,9 @@
     <ProjectReference Include="..\FamilyWallet.Infrastructure\FamilyWallet.Infrastructure.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <UseAppHost>false</UseAppHost>
+  </PropertyGroup>
+
+
 </Project>
