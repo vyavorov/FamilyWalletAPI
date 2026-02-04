@@ -52,7 +52,8 @@ namespace FamilyWallet.API.Controllers
 
             //Настройки за предния месец
             var prevMonthSettings = await _monthlyBudgetSettingsRepository.GetForUserAndMonthAsync(userId, prevMonth, prevYear);
-            var prevCarriedOver = prevMonthSettings.CarriedOverAmount;
+            var prevCarriedOver = prevMonthSettings?.CarriedOverAmount ?? 0;
+
 
             var prevIncome = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, prevMonth, prevYear);
             var prevExpenses = await _transactionRepository.GetTotalExpensesForMonthAsync(userId, prevMonth, prevYear);
@@ -60,6 +61,7 @@ namespace FamilyWallet.API.Controllers
 
             decimal carriedOver = prevIncome + prevCarriedOver - prevExpenses - prevSavings;
             if (carriedOver < 0) carriedOver = 0;
+            if (prevMonth == 2 && prevYear == 2026) carriedOver = 0; // Специален случай за февруари 2026, когато приложението стартира
 
             // Калкулация на баланса
             decimal totalBalance = income + carriedOver - expense;
