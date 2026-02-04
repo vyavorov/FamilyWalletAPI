@@ -52,7 +52,7 @@ namespace FamilyWallet.API.Controllers
 
             //Настройки за предния месец
             var prevMonthSettings = await _monthlyBudgetSettingsRepository.GetForUserAndMonthAsync(userId, prevMonth, prevYear);
-            var prevCarriedOver = prevMonthSettings?.CarriedOverAmount ?? 0;
+            var prevCarriedOver = prevMonthSettings.CarriedOverAmount;
 
 
             var prevIncome = await _transactionRepository.GetTotalIncomeForMonthAsync(userId, prevMonth, prevYear);
