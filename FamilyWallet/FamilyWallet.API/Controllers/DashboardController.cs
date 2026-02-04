@@ -61,7 +61,7 @@ namespace FamilyWallet.API.Controllers
 
             decimal carriedOver = prevIncome + prevCarriedOver - prevExpenses - prevSavings;
             if (carriedOver < 0) carriedOver = 0;
-            if (prevMonth == 2 && prevYear == 2026) carriedOver = 0; // Специален случай за февруари 2026, когато приложението стартира
+            if (prevMonth == 1 && prevYear == 2026) carriedOver = 0; // Специален случай за февруари 2026, когато приложението стартира
 
             // Калкулация на баланса
             decimal totalBalance = income + carriedOver - expense;
